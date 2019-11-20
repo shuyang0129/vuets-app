@@ -29,4 +29,5 @@ export interface IDialogData {
   level: string;
   title: string;
   type: string;
+  _id?: string;
 }
