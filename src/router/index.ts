@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Layout from "@/views/Layout/Index.vue";
+import jwtDecode from "jwt-decode";
 
 Vue.use(VueRouter);
 
@@ -57,7 +58,11 @@ export const routes = [
       {
         path: "/formData",
         name: "formData",
-        meta: { title: "表单管理", icon: "fa fa-file-text-o" },
+        meta: {
+          title: "表单管理",
+          icon: "fa fa-file-text-o",
+          roles: ["admin", "editor"]
+        },
         component: () => import("@/views/DataManage/FormData.vue")
       }
     ]
@@ -72,7 +77,7 @@ export const routes = [
       {
         path: "/accountData",
         name: "accountData",
-        meta: { title: "账户管理", icon: "fa fa-user-plus" },
+        meta: { title: "账户管理", icon: "fa fa-user-plus", roles: ["admin"] },
         component: () => import("@/views/UserManage/AccountData.vue")
       }
     ]
@@ -116,7 +121,16 @@ router.beforeEach((to, from, next) => {
   if (to.path === "/login" || to.path === "/password") {
     next();
   } else {
-    isLogin ? next() : next("/login");
+    if (isLogin) {
+      if (to.meta && to.meta.roles) {
+        const { key }: any = jwtDecode(localStorage.tsToken);
+        to.meta.roles.includes(key)
+          ? next()
+          : next({ path: "/404", replace: true });
+      }
+    } else {
+      next("/login");
+    }
   }
   if (to.path !== from.path) next();
 });
