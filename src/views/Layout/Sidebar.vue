@@ -1,38 +1,32 @@
 <template>
   <el-scrollbar class="el-scrollbar">
-    <el-menu class="el-menu-slide" :default-active="$router.currentRoute.path" router>
+    <el-menu class="el-menu-slide" :default-active="$route.path" router>
       <template v-for="item in menuItem">
         <el-menu-item
           v-if="item.children.length === 1"
           :index="item.children[0].path"
-          :key="item.children[0].path"
+          :key="item.name"
         >
           <i :class="item.children[0].meta.icon"></i>
           <span slot="title">{{item.children[0].meta.title}}</span>
         </el-menu-item>
         <!-- 多个子元素 -->
-        <el-submenu v-else :index="item.path" :key="item.path">
+        <el-submenu v-else :index="item.path" :key="item.name">
           <template slot="title">
             <i :class="item.meta.icon"></i>
             <span slot="title">{{item.meta.title}}</span>
           </template>
-          <el-menu-item-group>
-            <el-menu-item
-              v-for="subItem in item.children"
-              :index="subItem.path"
-              :key="subItem.path"
-            >
-              <i :class="subItem.meta.icon"></i>
-              <span slot="title">{{subItem.meta.title}}</span>
-            </el-menu-item>
-          </el-menu-item-group>
+          <el-menu-item v-for="subItem in item.children" :index="subItem.path" :key="subItem.path">
+            <i :class="subItem.meta.icon"></i>
+            <span slot="title">{{subItem.meta.title}}</span>
+          </el-menu-item>
         </el-submenu>
       </template>
     </el-menu>
   </el-scrollbar>
 </template>
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch } from "vue-property-decorator";
 import { State, Getter, Mutation, Action } from "vuex-class";
 import * as Interface from "@/models/interface";
 import { RouteConfig } from "vue-router";

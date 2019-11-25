@@ -31,3 +31,28 @@ export interface IDialogData {
   type: string;
   _id?: string;
 }
+
+export interface IUserManage {
+  avatar: string;
+  date: string;
+  des: string;
+  key: string;
+  pwd: string;
+  role: string;
+  username: string;
+  __v?: number;
+  _id: string;
+}
+
+export interface IAddAccount {
+  key: string;
+  role: string;
+  username: string;
+  des: string;
+}
+
+export interface IRoleAccount {
+  key: string;
+  role: string;
+  des: string;
+}
